@@ -7,16 +7,27 @@ namespace PayPlug\SyliusPayPlugPlugin\ApiClient;
 use Payplug\Resource\IVerifiableAPIResource;
 use Payplug\Resource\Payment;
 use Payplug\Resource\Refund;
+use PayPlug\SyliusPayPlugPlugin\Gateway\PayPlugGatewayFactory;
 use Webmozart\Assert\Assert;
 
 class PayPlugApiClient implements PayPlugApiClientInterface
 {
+    private const CURRENT_API_VERSION = '2019-08-06';
+
     /** @var \Payplug\Payplug */
     private $configuration;
+    /**
+     * @var string
+     */
+    private $factoryName;
 
-    public function __construct(string $secretKey)
+    public function __construct(string $secretKey, ?string $factoryName = null)
     {
-        $this->configuration = \Payplug\Payplug::init(['secretKey' => $secretKey]);
+        $this->configuration = \Payplug\Payplug::init([
+            'secretKey' => $secretKey,
+            'apiVersion' => self::CURRENT_API_VERSION,
+        ]);
+        $this->factoryName = $factoryName ?? PayPlugGatewayFactory::FACTORY_NAME;
     }
 
     /**
@@ -25,6 +36,11 @@ class PayPlugApiClient implements PayPlugApiClientInterface
     public function initialise(string $secretKey): void
     {
         \Payplug\Payplug::setSecretKey($secretKey);
+    }
+
+    public function getGatewayFactoryName(): string
+    {
+        return $this->factoryName;
     }
 
     public function getPermissions(): array

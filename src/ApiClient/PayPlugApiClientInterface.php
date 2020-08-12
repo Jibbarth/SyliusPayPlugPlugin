@@ -16,6 +16,8 @@ interface PayPlugApiClientInterface
 
     public const STATUS_CAPTURED = 'captured';
 
+    public const STATUS_AUTHORIZED = 'authorized';
+
     public const FAILED = 'failed';
 
     public const REFUNDED = 'refunded';
@@ -24,6 +26,8 @@ interface PayPlugApiClientInterface
      * @deprecated
      */
     public function initialise(string $secretKey): void;
+
+    public function getGatewayFactoryName(): string;
 
     public function getPermissions(): array;
 
